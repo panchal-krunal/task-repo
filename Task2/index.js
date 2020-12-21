@@ -66,6 +66,25 @@ app.post('/adduser', async (req, res) => {
     }
 })
 
+// API to get all users
+app.get('/users',async(req,res)=>{
+    let data = await loadData();
+    if(data && data.status){
+        res.status(200).send({
+            status:true,
+            data:JSON.parse(data.data),
+            message:"Record fetched successfully"
+        })
+    }
+    else{
+        res.status(400).send({
+            status:false,
+            data:[],
+            message:"Error while fetching data"
+        })
+    }
+})
+
 // API to get hierarchy of users based on Role Name
 app.post('/gethierarchy', async (req, res) => {
     let { roleName } = req.body
