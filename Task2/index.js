@@ -9,14 +9,16 @@ app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(cors());
 
+
+// file path of users.json
 var filePath = `${__dirname}/users.json`
 
-
+// method to add user
 app.post('/adduser', async (req, res) => {
-    // First read existing users.
     const {
         name, role
     } = req.body
+    // check if name exists in request body else show appropriate message and return
     if (!name) {
         res.status(400).send({
             status: false,
@@ -24,6 +26,7 @@ app.post('/adduser', async (req, res) => {
         });
         return;
     }
+    // check if role exists in request body else show appropriate message and return
     if (!role) {
         res.status(400).send({
             status: false,
@@ -31,24 +34,32 @@ app.post('/adduser', async (req, res) => {
         });
         return;
     }
+    // get existing users
     let users = await loadData()
+    // if users exists
     if (users && users.data) {
+        // get user array
         let data = JSON.parse(users.data)
+        // add the user object from request body to the existing users array
         data.push({
             id: uuidv4(),
             name,
             role
         })
+        // write the file
         let isRecordAdded = await storeData(data)
-        console.log(isRecordAdded)
+        // if user is added and file is written
         if (isRecordAdded.status) {
+            // get the users data
             users = await loadData()
+            // show the response with all data
             res.status(200).send({
                 status: true,
                 data: JSON.parse(users.data),
             });
         }
         else{
+            // else show that user is not added and written to the file
             res.status(400).send({
                 status: false,
                 message: "Error while adding user",
@@ -57,6 +68,7 @@ app.post('/adduser', async (req, res) => {
     }
 })
 
+// function to write the file accepts data as parameter of type (object{})
 const storeData = (data) => {
     try {
         return new Promise((resolve, reject) => {
@@ -76,7 +88,7 @@ const storeData = (data) => {
         reject({ status: false, message: "Error while writing data" });
     }
 }
-
+// function to get users data from users.json file
 const loadData = () => {
     try {
         return new Promise((resolve, reject) => {

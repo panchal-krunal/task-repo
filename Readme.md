@@ -10,8 +10,9 @@ Steps -
 2. cd Task2
 3. ```yarn```
 4. ```node index.js```
+5. This will run API on localhost server on port number 3000
 
-API List - .\
+To run the api -
 1. Add user
 ```
     POST
