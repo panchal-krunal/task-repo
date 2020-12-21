@@ -4,7 +4,7 @@ var bodyParser = require("body-parser");
 const cors = require("cors");
 var { v4: uuidv4 } = require('uuid')
 
-var { storeData, loadData,getHierarchy } = require("./helper")
+var { getHierarchy, loadDataFromDB, storeDataInDB, getRoles } = require("./helper")
 
 app.use(bodyParser());
 app.use(bodyParser.json());
@@ -14,7 +14,7 @@ app.use(cors());
 // API to add user
 app.post('/adduser', async (req, res) => {
     const {
-        name, role
+        name, roleId, salary
     } = req.body
     // check if name exists in request body else show appropriate message and return
     if (!name) {
@@ -25,62 +25,65 @@ app.post('/adduser', async (req, res) => {
         return;
     }
     // check if role exists in request body else show appropriate message and return
-    if (!role) {
+    if (!roleId) {
         res.status(400).send({
             status: false,
             message: "Role is required",
         });
         return;
     }
-    // get existing users
-    let users = await loadData()
-    // if users exists
-    if (users && users.data) {
-        // get user array
-        let data = JSON.parse(users.data)
-        // add the user object from request body to the existing users array
-        data.push({
-            id: uuidv4(),
-            name,
-            role
-        })
-        // write the file
-        let isRecordAdded = await storeData(data)
-        // if user is added and file is written
-        if (isRecordAdded.status) {
-            // get the users data
-            users = await loadData()
-            // show the response with all data
-            res.status(200).send({
-                status: true,
-                data: JSON.parse(users.data),
-            });
-        }
-        else {
-            // else show that user is not added and written to the file
-            res.status(400).send({
-                status: false,
-                message: "Error while adding user",
-            });
-        }
+    // check if salary is pressent in request body else show appropriate message and return
+    if (!salary) {
+        res.status(400).send({
+            status: false,
+            message: "Salary is required",
+        });
+        return;
     }
+    let payload = {
+        id: uuidv4(),
+        name,
+        roleId,
+        salary
+    }
+
+    // write the file
+    let isRecordAdded = await storeDataInDB(payload)
+    // if user is added and file is written
+    if (isRecordAdded.status) {
+        // get the users data
+        users = await loadDataFromDB()
+        // show the response with all data
+        res.status(200).send({
+            status: true,
+            data: users.data,
+        });
+    }
+    else {
+        // else show that user is not added and written to the file
+        res.status(400).send({
+            status: false,
+            message: "Error while adding user",
+        });
+    }
+
 })
 
 // API to get all users
-app.get('/users',async(req,res)=>{
-    let data = await loadData();
-    if(data && data.status){
+app.get('/users', async (req, res) => {
+    let data = await loadDataFromDB();
+    if (data && data.status) {
         res.status(200).send({
-            status:true,
-            data:JSON.parse(data.data),
-            message:"Record fetched successfully"
+            status: true,
+            data: data.data,
+            message: "Record fetched successfully"
         })
     }
-    else{
+    else {
         res.status(400).send({
-            status:false,
-            data:[],
-            message:"Error while fetching data"
+            status: false,
+            data: [],
+            message: "Error while fetching data"
         })
     }
 })
@@ -95,10 +98,18 @@ app.post('/gethierarchy', async (req, res) => {
         });
         return;
     }
-    let data = await getHierarchy('Journalist')
+    let data = await getHierarchy(roleName)
     res.send(data)
 })
 
+app.get('/roles', async (req, res) => {
+    let data = await getRoles()
+    res.status(200).send({
+        status: true,
+        data:data.data,
+        message: "Roles fetched successfully",
+    });
+})
 
 const port = process.env.PORT || 3000;
 
