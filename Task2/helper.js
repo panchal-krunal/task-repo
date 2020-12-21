@@ -1,5 +1,5 @@
 var fs = require('fs')
-const DB = require("./db.js");
+const DB = require('./DB');
 var { v4: uuidv4 } = require('uuid')
 // file path of users.json
 var filePath = `${__dirname}/users.json`
