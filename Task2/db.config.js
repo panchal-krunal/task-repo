@@ -1,6 +1,6 @@
 module.exports = {
-    HOST: "localhost",
-    USER: "root",
+    HOST: "taskdb.cstipanyf1vc.us-east-1.rds.amazonaws.com",
+    USER: "admin",
     PASSWORD: "Password",
-    DB: "task"
+    DB: "taskdb"
   };
