@@ -1,0 +1,22 @@
+[
+    {
+        "id":1,
+        "name":"System Administrator"  
+    },
+    {
+        "id":2,
+        "name":"Location Manager"  
+    },
+    {
+        "id":3,
+        "name":"Supervisor"  
+    },
+    {
+        "id":4,
+        "name":"Employee"  
+    },
+    {
+        "id":5,
+        "name":"Trainer"  
+    }
+]
