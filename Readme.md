@@ -32,3 +32,8 @@ To run the api -
         "roleName":"Journalist"
     }'
 ```
+3. Get All users
+```
+    GET
+    curl --location --request GET 'http://localhost:3000/users'
+```
