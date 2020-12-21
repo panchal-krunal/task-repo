@@ -4,12 +4,12 @@
 
 
 ## Task 2
-This folder contains NodeJS API.\
-Steps -.\
-1. Clone the repo.\
-2. cd Task2.\
-3. ```yarn```.\
-4. ```node index.js```.\
+This folder contains NodeJS API.
+Steps -
+1. Clone the repo
+2. cd Task2
+3. ```yarn```
+4. ```node index.js```
 
 API List - .\
 1. Add user
