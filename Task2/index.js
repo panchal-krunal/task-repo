@@ -2,18 +2,16 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 const cors = require("cors");
-var fs = require("fs");
 var { v4: uuidv4 } = require('uuid')
+
+var { storeData, loadData,getHierarchy } = require("./helper")
 
 app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(cors());
 
 
-// file path of users.json
-var filePath = `${__dirname}/users.json`
-
-// method to add user
+// API to add user
 app.post('/adduser', async (req, res) => {
     const {
         name, role
@@ -58,59 +56,29 @@ app.post('/adduser', async (req, res) => {
                 data: JSON.parse(users.data),
             });
         }
-        else{
+        else {
             // else show that user is not added and written to the file
             res.status(400).send({
                 status: false,
                 message: "Error while adding user",
-              });
+            });
         }
     }
 })
 
-// function to write the file accepts data as parameter of type (object{})
-const storeData = (data) => {
-    try {
-        return new Promise((resolve, reject) => {
-            fs.writeFile(filePath, JSON.stringify(data), (error) => {
-                if (error) {
-                    reject({ status: false, message: "Error while writing data" });
-                    return;
-                }
-                resolve({
-                    status: true,
-                    message: "Record added successfully",
-                });
-            })
-        })
-    } catch (err) {
-        console.error(err)
-        reject({ status: false, message: "Error while writing data" });
+// API to get hierarchy of users based on Role Name
+app.post('/gethierarchy', async (req, res) => {
+    let { roleName } = req.body
+    if (!roleName) {
+        res.status(400).send({
+            status: false,
+            message: "Role Name is required",
+        });
+        return;
     }
-}
-// function to get users data from users.json file
-const loadData = () => {
-    try {
-        return new Promise((resolve, reject) => {
-            fs.readFile(filePath, 'utf8', (err, data) => {
-                if (err) {
-                    reject({ status: false, message: "Error while fetching data" });
-                    return;
-                }
-
-                resolve({
-                    status: true,
-                    data,
-                    message: "Record fetched successfully",
-                });
-            })
-        })
-
-    } catch (err) {
-        console.log(err)
-        reject({ status: false, message: err.message });
-    }
-}
+    let data = await getHierarchy('Journalist')
+    res.send(data)
+})
 
 
 const port = process.env.PORT || 3000;

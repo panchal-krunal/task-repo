@@ -23,3 +23,12 @@ To run the api -
         "role":1
     }'
 ```
+2. Get Hierarchy of user based on role name
+```
+    POST
+    curl --location --request POST 'http://localhost:3000/gethierarchy' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "roleName":"Journalist"
+    }'
+```
