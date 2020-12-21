@@ -1,22 +1,27 @@
 [
     {
         "id":1,
-        "name":"System Administrator"  
+        "name":"System Administrator",
+        "parentId":0
     },
     {
         "id":2,
-        "name":"Location Manager"  
+        "name":"Location Manager",
+        "parentId":1
     },
     {
         "id":3,
-        "name":"Supervisor"  
+        "name":"Supervisor"  ,
+        "parentId":2
     },
     {
         "id":4,
-        "name":"Employee"  
+        "name":"Employee"  ,
+        "parentId":3
     },
     {
         "id":5,
-        "name":"Trainer"  
+        "name":"Trainer"  ,
+        "parentId":3
     }
 ]

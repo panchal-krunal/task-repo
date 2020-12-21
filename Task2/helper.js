@@ -3,6 +3,7 @@ const DB = require('./DB');
 var { v4: uuidv4 } = require('uuid')
 // file path of users.json
 var filePath = `${__dirname}/users.json`
+var rolesFilePath = `${__dirname}/roles.json`
 
 // helper function to write the file accepts data as parameter of type (object{})
 const storeData = (data) => {
@@ -146,11 +147,73 @@ const getHierarchy = (roleName) => {
 }
 
 
+/// Task 1 helper function
+
+const getSubordinates = (id) => {
+    try {
+        return new Promise((resolve, reject) => {
+            let users = []
+            if (id === 1) {
+                fs.readFile(filePath, 'utf8', (fileError, fileData) => {
+                    if (fileError) {
+                        reject({ status: false, message: "Error while fetching data" });
+                        return;
+                    }
+                    fileData = JSON.parse(fileData)
+
+                    fileData.map(userItem => {
+                        if (id !== userItem.role) {
+                            users.push(userItem)
+                        }
+                    })
+                    resolve(users)
+                })
+            }
+            else {
+                fs.readFile(rolesFilePath, 'utf8', (err, data) => {
+                    if (err) {
+                        reject({ status: false, message: "Error while fetching data" });
+                        return;
+                    }
+                    data = JSON.parse(data)
+                    let filterResult = data.filter(item => item.parentId.toString() === id.toString())
+                    if (filterResult && filterResult.length !== 0) {
+
+                        fs.readFile(filePath, 'utf8', (fileError, fileData) => {
+                            if (fileError) {
+                                reject({ status: false, message: "Error while fetching data" });
+                                return;
+                            }
+                            fileData = JSON.parse(fileData)
+                            filterResult.map(item => {
+                                fileData.map(userItem => {
+                                    if (item.id === userItem.role) {
+                                        users.push(userItem)
+                                    }
+                                })
+                            })
+                            resolve(users)
+                        })
+
+
+                    }
+
+                })
+            }
+        })
+
+    } catch (err) {
+        console.log(err)
+        reject({ status: false, message: err.message });
+    }
+}
+
 module.exports = {
     storeData,
     loadData,
     loadDataFromDB,
     storeDataInDB,
     getHierarchy,
-    getRoles
+    getRoles,
+    getSubordinates
 }

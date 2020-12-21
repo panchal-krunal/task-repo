@@ -4,12 +4,27 @@ var bodyParser = require("body-parser");
 const cors = require("cors");
 var { v4: uuidv4 } = require('uuid')
 
-var { getHierarchy, loadDataFromDB, storeDataInDB, getRoles } = require("./helper")
+var { getHierarchy, loadDataFromDB, storeDataInDB, getRoles, getSubordinates } = require("./helper")
 
 app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(cors());
 
+
+//Task 1 api 
+
+app.post('/getsubordinates', async (req, res) => {
+    const { roleId } = req.body
+    if (!roleId) {
+        res.status(400).send({
+            status: false,
+            message: "Role id is required"
+        })
+        return;
+    }
+    let data = await getSubordinates(roleId)
+    res.status(200).send(data)
+})
 
 // API to add user
 app.post('/adduser', async (req, res) => {
@@ -106,7 +121,7 @@ app.get('/roles', async (req, res) => {
     let data = await getRoles()
     res.status(200).send({
         status: true,
-        data:data.data,
+        data: data.data,
         message: "Roles fetched successfully",
     });
 })

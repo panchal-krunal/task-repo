@@ -1,1 +1,27 @@
-{"id":"038a3af6-6589-4a61-a810-d4f54d6a1248","name":"test user","roleId":"e820338a-4345-11eb-be4b-81677f4af3e3","salary":"12121"}
+[
+    {
+        "id": 1,
+        "name": "Adam Admin",
+        "role": 1
+    },
+    {
+        "id": 2,
+        "name": "Emily Employee", 
+        "role": 4
+    },
+    {
+        "id": 3,
+        "name": "Sam Supervisor", 
+        "role": 3
+    },
+    {
+        "id": 4,
+        "name": "Mary Manager", 
+        "role": 2
+    },
+    {
+        "id": 5,
+        "name": "Trent Trainer", 
+        "role": 5
+    }
+]
